@@ -2,8 +2,6 @@ import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
-THREE.Quaternion
-
 window.addEventListener('DOMContentLoaded', () => {
     const app = new Application();
     app.animatedCube();
@@ -15,14 +13,8 @@ function animate(app: Application) {
         animate(app);
     });
 
-    // console.log(app.camera.position, app.camera.rotation);
-
-    // app.controls.update();
-
     app.render();
-
     app.stats.update();
-
 }
 
 class Application {
@@ -51,12 +43,9 @@ class Application {
         document.body.appendChild(this.renderer.domElement);
 
         this.initLight();
-        // this.initControls();
 
         this.stats = Stats();
         document.body.appendChild(this.stats.dom);
-
-        // this.addAxis();
 
         this.addGround();
         this.addMainCube();
@@ -77,10 +66,8 @@ class Application {
                     this.mainCube.position.z += Math.sin(this.mainCube.rotation.y);
                     break;
                 case 'a':
-                    // this.mainCube.rotateY(15*Math.PI/180);
                     const quaternion = new THREE.Quaternion();
                     quaternion.setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), this.mainCube.rotation.y + THREE.MathUtils.degToRad(15));
-                    // this.mainCube.applyQuaternion(quaternion);
                     this.mainCube.quaternion.copy(quaternion);
                     break;
                 case 'd':
@@ -124,15 +111,6 @@ class Application {
         this.scene.add(ambLight);        
     }
 
-    initControls() {
-        this.controls = new TrackballControls(this.camera, this.renderer.domElement);
-        this.controls.rotateSpeed = 1.0;
-        this.controls.zoomSpeed = 1.2;
-        this.controls.panSpeed = 0.8;
-
-        this.controls.keys = [ 'KeyZ', 'KeyX', 'KeyC' ];
-    }
-
     render() {
         this.stats.begin();
         this.renderer.render(this.scene, this.camera);
@@ -144,86 +122,11 @@ class Application {
         this.camera.updateProjectionMatrix();
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);  
-        
-        // this.controls.handleResize();
     }
 
     logCamera() {
         console.log(this.camera.position);
-        console.log('x: ' + this.camera.rotation.x * (180/Math.PI) + '; y: ' + this.camera.rotation.y * (180/Math.PI)  + '; z: ' + this.camera.rotation.z * (180/Math.PI));
-    }
-
-    addAxis() {
-        let xPoints = [];
-        xPoints.push(new THREE.Vector3(-100, 0, 0));
-        xPoints.push(new THREE.Vector3(100, 0, 0));
-
-        let xArrow = [];
-        xArrow.push(new THREE.Vector3(90, 10, 0));
-        xArrow.push(new THREE.Vector3(100, 0, 0));
-        xArrow.push(new THREE.Vector3(90, -10, 0));
-
-        this.scene.add(
-            new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints(xPoints),
-                new THREE.LineBasicMaterial({color: 0xff0000})
-            )
-        );
-
-        this.scene.add(
-            new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints(xArrow),
-                new THREE.LineBasicMaterial({color: 0xff0000})
-            )
-        );
-
-
-        let yPoints = [];
-        yPoints.push(new THREE.Vector3(0, -100, 0));
-        yPoints.push(new THREE.Vector3(0, 100, 0));
-
-        let yArrow = [];
-        yArrow.push(new THREE.Vector3(10, 90, 0));
-        yArrow.push(new THREE.Vector3(0, 100, 0));
-        yArrow.push(new THREE.Vector3(-10, 90, 0));
-
-        this.scene.add(
-            new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints(yPoints),
-                new THREE.LineBasicMaterial({color: 0x00ff00})
-            )
-        );
-
-        this.scene.add(
-            new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints(yArrow),
-                new THREE.LineBasicMaterial({color: 0x00ff00})
-            )
-        );
-
-
-        let zPoints = [];
-        zPoints.push(new THREE.Vector3(0, 0, -100));
-        zPoints.push(new THREE.Vector3(0, 0, 100));
-
-        let zArrow = [];
-        zArrow.push(new THREE.Vector3(10, 0, 90));
-        zArrow.push(new THREE.Vector3(0, 0, 100));
-        zArrow.push(new THREE.Vector3(-10, 0, 90));
-
-        this.scene.add(
-            new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints(zPoints),
-                new THREE.LineBasicMaterial({color: 0x0000ff})
-            )
-        );
-
-        this.scene.add(
-            new THREE.Line(
-                new THREE.BufferGeometry().setFromPoints(zArrow),
-                new THREE.LineBasicMaterial({color: 0x0000ff})
-            )
-        );
+        console.log('x: ' + THREE.MathUtils.radToDeg(this.camera.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.camera.rotation.y)+ '; z: ' + THREE.MathUtils.radToDeg(this.camera.rotation.z));
     }
 
     addGround() {
@@ -277,6 +180,6 @@ class SimpleCubeMesh extends THREE.Mesh {
 
     logState() {
         console.log(this.position);
-        console.log('x: ' + this.rotation.x * (180/Math.PI) + '; y: ' + this.rotation.y * (180/Math.PI)  + '; z: ' + this.rotation.z * (180/Math.PI));
+        console.log('x: ' + THREE.MathUtils.radToDeg(this.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.rotation.y) + '; z: ' + THREE.MathUtils.radToDeg(this.rotation.z));
     }
 }
