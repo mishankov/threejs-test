@@ -8,7 +8,7 @@ window.addEventListener('DOMContentLoaded', () => {
     animate(app);
 });
 
-function animate(app) {
+function animate(app: Application) {
     requestAnimationFrame(function() {
         animate(app);
     });
@@ -22,9 +22,17 @@ function animate(app) {
 }
 
 class Application {
+    scene: THREE.Scene;
+    camera: THREE.PerspectiveCamera;
+    renderer: THREE.WebGLRenderer;
+    controls: TrackballControls;
+    stats: Stats;
+
+    mainCube: SimpleCubeMesh;
+
+
     constructor() {
         this.init();
-        // animate(this.renderer, this.scene, this.camera, this.controls);
     }
 
     init() {
@@ -64,25 +72,25 @@ class Application {
     }
 
     initLight() {
-        let light = new THREE.DirectionalLight(0xFFFFFF, 1.0);
-        light.position.set(-100, 100, 100);
-        light.target.position.set(0, 0, 0);
-        light.castShadow = true;
-        light.shadow.bias = -0.001;
-        light.shadow.mapSize.width = 4096;
-        light.shadow.mapSize.height = 4096;
-        light.shadow.camera.near = 0.1;
-        light.shadow.camera.far = 500.0;
-        light.shadow.camera.near = 0.5;
-        light.shadow.camera.far = 500.0;
-        light.shadow.camera.left = 50;
-        light.shadow.camera.right = -50;
-        light.shadow.camera.top = 50;
-        light.shadow.camera.bottom = -50;
-        this.scene.add(light);
+        let dirLight = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+        dirLight.position.set(-100, 100, 100);
+        dirLight.target.position.set(0, 0, 0);
+        dirLight.castShadow = true;
+        dirLight.shadow.bias = -0.001;
+        dirLight.shadow.mapSize.width = 4096;
+        dirLight.shadow.mapSize.height = 4096;
+        dirLight.shadow.camera.near = 0.1;
+        dirLight.shadow.camera.far = 500.0;
+        dirLight.shadow.camera.near = 0.5;
+        dirLight.shadow.camera.far = 500.0;
+        dirLight.shadow.camera.left = 50;
+        dirLight.shadow.camera.right = -50;
+        dirLight.shadow.camera.top = 50;
+        dirLight.shadow.camera.bottom = -50;
+        this.scene.add(dirLight);
     
-        light = new THREE.AmbientLight(0xFFFFFF, 0.25);
-        this.scene.add(light);        
+        let ambLight = new THREE.AmbientLight(0xFFFFFF, 0.25);
+        this.scene.add(ambLight);        
     }
 
     initControls() {
@@ -133,7 +141,7 @@ class Application {
         this.scene.add(cube);
         this.renderer.render(this.scene, this.camera);
         
-        function animate(renderer, scene, camera) {
+        function animate(renderer: THREE.WebGLRenderer, scene: THREE.Scene, camera: THREE.Camera) {
             requestAnimationFrame(function() {
                 animate(renderer, scene, camera);
             });
@@ -148,7 +156,7 @@ class Application {
 }
 
 class SimpleCubeMesh extends THREE.Mesh {
-    constructor(color=0x000000, width, height, depth) {
+    constructor(color=0x000000, width?: number, height?: number, depth?: number) {
         const geometry = new THREE.BoxGeometry(width, height, depth);
         const material = new THREE.MeshStandardMaterial({color: color});
         super(geometry, material);
