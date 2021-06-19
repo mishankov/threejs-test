@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { TrackballControls } from 'three/examples/jsm/controls/TrackballControls';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
+THREE.Quaternion
+
 window.addEventListener('DOMContentLoaded', () => {
     const app = new Application();
     app.animatedCube();
@@ -13,7 +15,9 @@ function animate(app: Application) {
         animate(app);
     });
 
-    app.controls.update();
+    // console.log(app.camera.position, app.camera.rotation);
+
+    // app.controls.update();
 
     app.render();
 
@@ -37,7 +41,8 @@ class Application {
 
     init() {
         this.scene = new THREE.Scene();
-        this.scene.background = new THREE.Color(0xffffff)
+        this.scene.background = new THREE.Color(0xffffff);
+        this.scene.add(new THREE.AxesHelper(100));
         
         this.initCamera()
     
@@ -46,10 +51,12 @@ class Application {
         document.body.appendChild(this.renderer.domElement);
 
         this.initLight();
-        this.initControls();
+        // this.initControls();
 
         this.stats = Stats();
         document.body.appendChild(this.stats.dom);
+
+        // this.addAxis();
 
         this.addGround();
         this.addMainCube();
@@ -59,16 +66,40 @@ class Application {
         }, false);
 
         window.addEventListener('keypress', (event) => {
+            console.log(event.key + " pressed");
             switch (event.key) {
-                case ' ':
-                    this.controls.reset();
+                case 'w':
+                    this.mainCube.position.x += Math.cos(this.mainCube.rotation.y);
+                    this.mainCube.position.z += -Math.sin(this.mainCube.rotation.y);
+                    break;
+                case 's':
+                    this.mainCube.position.x += -Math.cos(this.mainCube.rotation.y);
+                    this.mainCube.position.z += Math.sin(this.mainCube.rotation.y);
+                    break;
+                case 'a':
+                    // this.mainCube.rotateY(15*Math.PI/180);
+                    const quaternion = new THREE.Quaternion();
+                    quaternion.setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), this.mainCube.rotation.y + THREE.MathUtils.degToRad(15));
+                    // this.mainCube.applyQuaternion(quaternion);
+                    this.mainCube.quaternion.copy(quaternion);
+                    break;
+                case 'd':
+                    this.mainCube.rotateY(-15*Math.PI/180);
+                    break;
+                case '1':
+                    this.camera.lookAt(0, 0, 0);
+                    break;
+                case '0':
+                    this.camera.lookAt(this.camera.position);
             }
+            this.mainCube.logState();
         });
     }
 
     initCamera() {
         this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(25, 10, 25);
+        this.camera.position.set(-25, 50, -25);
+        this.camera.lookAt(0, 0, 0);
     }
 
     initLight() {
@@ -114,7 +145,85 @@ class Application {
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);  
         
-        this.controls.handleResize();
+        // this.controls.handleResize();
+    }
+
+    logCamera() {
+        console.log(this.camera.position);
+        console.log('x: ' + this.camera.rotation.x * (180/Math.PI) + '; y: ' + this.camera.rotation.y * (180/Math.PI)  + '; z: ' + this.camera.rotation.z * (180/Math.PI));
+    }
+
+    addAxis() {
+        let xPoints = [];
+        xPoints.push(new THREE.Vector3(-100, 0, 0));
+        xPoints.push(new THREE.Vector3(100, 0, 0));
+
+        let xArrow = [];
+        xArrow.push(new THREE.Vector3(90, 10, 0));
+        xArrow.push(new THREE.Vector3(100, 0, 0));
+        xArrow.push(new THREE.Vector3(90, -10, 0));
+
+        this.scene.add(
+            new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(xPoints),
+                new THREE.LineBasicMaterial({color: 0xff0000})
+            )
+        );
+
+        this.scene.add(
+            new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(xArrow),
+                new THREE.LineBasicMaterial({color: 0xff0000})
+            )
+        );
+
+
+        let yPoints = [];
+        yPoints.push(new THREE.Vector3(0, -100, 0));
+        yPoints.push(new THREE.Vector3(0, 100, 0));
+
+        let yArrow = [];
+        yArrow.push(new THREE.Vector3(10, 90, 0));
+        yArrow.push(new THREE.Vector3(0, 100, 0));
+        yArrow.push(new THREE.Vector3(-10, 90, 0));
+
+        this.scene.add(
+            new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(yPoints),
+                new THREE.LineBasicMaterial({color: 0x00ff00})
+            )
+        );
+
+        this.scene.add(
+            new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(yArrow),
+                new THREE.LineBasicMaterial({color: 0x00ff00})
+            )
+        );
+
+
+        let zPoints = [];
+        zPoints.push(new THREE.Vector3(0, 0, -100));
+        zPoints.push(new THREE.Vector3(0, 0, 100));
+
+        let zArrow = [];
+        zArrow.push(new THREE.Vector3(10, 0, 90));
+        zArrow.push(new THREE.Vector3(0, 0, 100));
+        zArrow.push(new THREE.Vector3(-10, 0, 90));
+
+        this.scene.add(
+            new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(zPoints),
+                new THREE.LineBasicMaterial({color: 0x0000ff})
+            )
+        );
+
+        this.scene.add(
+            new THREE.Line(
+                new THREE.BufferGeometry().setFromPoints(zArrow),
+                new THREE.LineBasicMaterial({color: 0x0000ff})
+            )
+        );
     }
 
     addGround() {
@@ -130,8 +239,9 @@ class Application {
     }
     
     addMainCube() {
-        this.mainCube = new SimpleCubeMesh(0x000000, 10, 10, 10);
-        this.mainCube.position.set(0, 10, 5);
+        this.mainCube = new SimpleCubeMesh(0xffff00, 10, 10, 10);
+        this.mainCube.position.set(0, 10, 0);
+        this.mainCube.rotation.order = 'YXZ';
         this.scene.add(this.mainCube);
     }
 
@@ -163,5 +273,10 @@ class SimpleCubeMesh extends THREE.Mesh {
 
         this.castShadow = true;
         this.receiveShadow = true;
+    }
+
+    logState() {
+        console.log(this.position);
+        console.log('x: ' + this.rotation.x * (180/Math.PI) + '; y: ' + this.rotation.y * (180/Math.PI)  + '; z: ' + this.rotation.z * (180/Math.PI));
     }
 }
