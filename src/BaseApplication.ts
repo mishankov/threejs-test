@@ -4,19 +4,19 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 
 export interface AnimatedObject {
     object: THREE.Mesh;
-    animation: Function;
+    animation: (app: THREE.Mesh, time: number) => void;
 }
 
 
-export function animate(app: BaseApplication) {
-    requestAnimationFrame(function() {
-        animate(app);
+export function animate(app: BaseApplication, time?: number) {
+    requestAnimationFrame(function(time) {
+        animate(app, time);
     });
 
     for (let index = 0; index < app.animatedObjects.length; index++) {
         const element = app.animatedObjects[index];
         
-        element.animation(element.object);
+        element.animation(element.object, time);
     }
 
     if (app.objectAttachedToCamera !== undefined) {
@@ -144,6 +144,10 @@ export class BaseApplication {
 
     attachCameraToObject(object: THREE.Mesh) {
         this.objectAttachedToCamera = object;
+    }
+
+    deleteCameraAttachment() {
+        delete this.objectAttachedToCamera;
     }
 
     logCamera() {

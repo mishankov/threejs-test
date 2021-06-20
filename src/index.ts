@@ -15,8 +15,6 @@ class Application extends BA.BaseApplication {
         this.addGround();
         this.addAnimatedCubes();
         this.addMainCube();
-        // this.attachCameraToObject(this.mainCube);
-        // this.attachCameraToObject(this.animatedCubes[0]);
     }
 
     onKeypress(keyName: string) {
@@ -51,7 +49,9 @@ class Application extends BA.BaseApplication {
                 this.attachCameraToObject(this.animatedCubes[2]);
                 break;
             case '0':
-                this.camera.lookAt(this.camera.position);
+                this.deleteCameraAttachment();
+                this.initCamera();
+                break;
         }
         this.mainCube.logState();
     }
