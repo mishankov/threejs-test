@@ -2,6 +2,30 @@ import { debug } from 'console';
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
+
+export class CameraWrapper {
+    actualCamera: THREE.PerspectiveCamera;
+    folowedObject: THREE.Mesh;
+
+    constructor(camera: THREE.PerspectiveCamera) {
+        this.actualCamera = camera
+    }
+
+    followObject(object: THREE.Mesh) {
+        this.folowedObject = object;
+    }
+
+    unfollowObject() {
+        delete this.folowedObject;
+    }
+
+    logCameraState() {
+        console.log('POSITION x: ' + this.actualCamera.position.x + '; y: ' + this.actualCamera.position.y + '; z: ' + this.actualCamera.position.z);
+        console.log('ROTATION x: ' + THREE.MathUtils.radToDeg(this.actualCamera.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.actualCamera.rotation.y) + '; z: ' + THREE.MathUtils.radToDeg(this.actualCamera.rotation.z));
+    }
+}
+
+
 export interface AnimatedObject {
     object: THREE.Mesh;
     animation: (app: THREE.Mesh, time: number) => void;
@@ -19,14 +43,14 @@ export function animate(app: BaseApplication, time?: number) {
         element.animation(element.object, time);
     }
 
-    if (app.objectAttachedToCamera !== undefined) {
-        app.camera.position.set(
-            app.objectAttachedToCamera.position.x - Math.cos(app.objectAttachedToCamera.rotation.y) * 30,
-            app.objectAttachedToCamera.position.y + 20,
-            app.objectAttachedToCamera.position.z + Math.sin(app.objectAttachedToCamera.rotation.y) * 30
+    if (app.camera.folowedObject !== undefined) {
+        app.camera.actualCamera.position.set(
+            app.camera.folowedObject.position.x - Math.cos(app.camera.folowedObject.rotation.y) * 30,
+            app.camera.folowedObject.position.y + 20,
+            app.camera.folowedObject.position.z + Math.sin(app.camera.folowedObject.rotation.y) * 30
         );
     
-        app.camera.lookAt(app.objectAttachedToCamera.position);
+        app.camera.actualCamera.lookAt(app.camera.folowedObject.position);
     }
 
     app.render();
@@ -34,14 +58,13 @@ export function animate(app: BaseApplication, time?: number) {
 
 export class BaseApplication {
     scene: THREE.Scene;
-    camera: THREE.PerspectiveCamera;
+    camera: CameraWrapper;
     renderer: THREE.WebGLRenderer;
     stats: Stats;
 
     animatedObjects: Array<AnimatedObject>;
 
     DEBUG: boolean;
-    objectAttachedToCamera: THREE.Mesh;
 
     constructor(debug=false) {
         this._init(debug);
@@ -77,9 +100,11 @@ export class BaseApplication {
     }
 
     initCamera() {
-        this.camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(-25, 50, -25);
-        this.camera.lookAt(0, 0, 0);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(-25, 50, -25);
+        camera.lookAt(0, 0, 0);
+
+        this.camera = new CameraWrapper(camera);
     }
 
     initRenderer() {
@@ -125,7 +150,7 @@ export class BaseApplication {
             this.stats.begin();
         }
 
-        this.renderer.render(this.scene, this.camera);
+        this.renderer.render(this.scene, this.camera.actualCamera);
         
         if (this.DEBUG) {
             this.stats.end();
@@ -134,24 +159,13 @@ export class BaseApplication {
     }
 
     onResize() {
-        this.camera.aspect = window.innerWidth / window.innerHeight;
-        this.camera.updateProjectionMatrix();
+        this.camera.actualCamera.aspect = window.innerWidth / window.innerHeight;
+        this.camera.actualCamera.updateProjectionMatrix();
 
         this.renderer.setSize(window.innerWidth, window.innerHeight);  
     }
 
     onKeypress(keyName: string) {}
 
-    attachCameraToObject(object: THREE.Mesh) {
-        this.objectAttachedToCamera = object;
-    }
 
-    deleteCameraAttachment() {
-        delete this.objectAttachedToCamera;
-    }
-
-    logCamera() {
-        console.log('POSITION x: ' + this.camera.position.x + '; y: ' + this.camera.position.y + '; z: ' + this.camera.position.z);
-        console.log('ROTATION x: ' + THREE.MathUtils.radToDeg(this.camera.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.camera.rotation.y) + '; z: ' + THREE.MathUtils.radToDeg(this.camera.rotation.z));
-    }
 };
