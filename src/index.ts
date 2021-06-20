@@ -37,19 +37,19 @@ class Application extends BA.BaseApplication {
                 this.mainCube.rotateY(-15*Math.PI/180);
                 break;
             case 'm':
-                this.camera.followObject(this.mainCube);
+                this.camera.setFollowedObject(this.mainCube);
                 break;
             case '1':
-                this.camera.followObject(this.animatedCubes[0]);
+                this.camera.setFollowedObject(this.animatedCubes[0]);
                 break;
             case '2':
-                this.camera.followObject(this.animatedCubes[1]);
+                this.camera.setFollowedObject(this.animatedCubes[1]);
                 break;
             case '3':
-                this.camera.followObject(this.animatedCubes[2]);
+                this.camera.setFollowedObject(this.animatedCubes[2]);
                 break;
             case '0':
-                this.camera.unfollowObject();
+                this.camera.deletefollowedObject();
                 this.initCamera();
                 break;
         }

@@ -11,12 +11,24 @@ export class CameraWrapper {
         this.actualCamera = camera
     }
 
-    followObject(object: THREE.Mesh) {
+    setFollowedObject(object: THREE.Mesh) {
         this.folowedObject = object;
     }
 
-    unfollowObject() {
+    deletefollowedObject() {
         delete this.folowedObject;
+    }
+
+    move() {
+        if (this.folowedObject !== undefined) {
+            this.actualCamera.position.set(
+                this.folowedObject.position.x - Math.cos(this.folowedObject.rotation.y) * 30,
+                this.folowedObject.position.y + 20,
+                this.folowedObject.position.z + Math.sin(this.folowedObject.rotation.y) * 30
+            );
+        
+            this.actualCamera.lookAt(this.folowedObject.position);
+        }       
     }
 
     logCameraState() {
@@ -43,16 +55,7 @@ export function animate(app: BaseApplication, time?: number) {
         element.animation(element.object, time);
     }
 
-    if (app.camera.folowedObject !== undefined) {
-        app.camera.actualCamera.position.set(
-            app.camera.folowedObject.position.x - Math.cos(app.camera.folowedObject.rotation.y) * 30,
-            app.camera.folowedObject.position.y + 20,
-            app.camera.folowedObject.position.z + Math.sin(app.camera.folowedObject.rotation.y) * 30
-        );
-    
-        app.camera.actualCamera.lookAt(app.camera.folowedObject.position);
-    }
-
+    app.camera.move();
     app.render();
 }
 
