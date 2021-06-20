@@ -15,6 +15,8 @@ class Application extends BA.BaseApplication {
         this.addGround();
         this.addAnimatedCubes();
         this.addMainCube();
+        // this.attachCameraToObject(this.mainCube);
+        // this.attachCameraToObject(this.animatedCubes[0]);
     }
 
     onKeypress(keyName: string) {
@@ -36,8 +38,17 @@ class Application extends BA.BaseApplication {
             case 'd':
                 this.mainCube.rotateY(-15*Math.PI/180);
                 break;
+            case 'm':
+                this.attachCameraToObject(this.mainCube);
+                break;
             case '1':
-                this.camera.lookAt(0, 0, 0);
+                this.attachCameraToObject(this.animatedCubes[0]);
+                break;
+            case '2':
+                this.attachCameraToObject(this.animatedCubes[1]);
+                break;
+            case '3':
+                this.attachCameraToObject(this.animatedCubes[2]);
                 break;
             case '0':
                 this.camera.lookAt(this.camera.position);
@@ -58,7 +69,7 @@ class Application extends BA.BaseApplication {
     }
     
     addMainCube() {
-        this.mainCube = new SimpleCubeMesh(0xffff00, 10, 10, 10);
+        this.mainCube = new SimpleCubeMesh(0xff00ff, 10, 10, 10);
         this.mainCube.position.set(0, 10, 0);
         this.mainCube.rotation.order = 'YXZ';
         this.scene.add(this.mainCube);
@@ -67,8 +78,8 @@ class Application extends BA.BaseApplication {
     addAnimatedCubes() {
         this.animatedCubes = [
             new SimpleCubeMesh(0x00ff00),
-            new SimpleCubeMesh(0xff0000, undefined, undefined, undefined, new THREE.Vector3(0, 10, 0)),
-            new SimpleCubeMesh(0x0000ff, undefined, undefined, undefined, new THREE.Vector3(0, 5, 0))
+            new SimpleCubeMesh(0xffff00, undefined, undefined, undefined, new THREE.Vector3(0, 5, 0)),
+            new SimpleCubeMesh(0xff0000, undefined, undefined, undefined, new THREE.Vector3(0, 10, 0))
         ];
 
         for (let index = 0; index < this.animatedCubes.length; index++) {
@@ -105,7 +116,8 @@ class SimpleCubeMesh extends THREE.Mesh {
     }
 
     logState() {
-        console.log(this.position);
-        console.log('x: ' + THREE.MathUtils.radToDeg(this.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.rotation.y) + '; z: ' + THREE.MathUtils.radToDeg(this.rotation.z));
+        console.log("SimpleCubeMesh state");
+        console.log('POSITION x: ' + this.position.x + '; y: ' + this.position.y + '; z: ' + this.position.z);
+        console.log('ROTATION x: ' + THREE.MathUtils.radToDeg(this.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.rotation.y) + '; z: ' + THREE.MathUtils.radToDeg(this.rotation.z));
     }
 }

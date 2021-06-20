@@ -19,6 +19,16 @@ export function animate(app: BaseApplication) {
         element.animation(element.object);
     }
 
+    if (app.objectAttachedToCamera !== undefined) {
+        app.camera.position.set(
+            app.objectAttachedToCamera.position.x - Math.cos(app.objectAttachedToCamera.rotation.y) * 30,
+            app.objectAttachedToCamera.position.y + 20,
+            app.objectAttachedToCamera.position.z + Math.sin(app.objectAttachedToCamera.rotation.y) * 30
+        );
+    
+        app.camera.lookAt(app.objectAttachedToCamera.position);
+    }
+
     app.render();
 }
 
@@ -31,6 +41,7 @@ export class BaseApplication {
     animatedObjects: Array<AnimatedObject>;
 
     DEBUG: boolean;
+    objectAttachedToCamera: THREE.Mesh;
 
     constructor(debug=false) {
         this._init(debug);
@@ -130,6 +141,10 @@ export class BaseApplication {
     }
 
     onKeypress(keyName: string) {}
+
+    attachCameraToObject(object: THREE.Mesh) {
+        this.objectAttachedToCamera = object;
+    }
 
     logCamera() {
         console.log('POSITION x: ' + this.camera.position.x + '; y: ' + this.camera.position.y + '; z: ' + this.camera.position.z);
