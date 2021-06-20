@@ -1,8 +1,8 @@
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
-import { CameraWrapper } from './CameraWrapper';
-import { KeyboardInputController } from './KeyboardInputController';
+import { CameraWrapper } from './cameras/CameraWrapper';
+import { KeyboardInputController } from './input-controllers/KeyboardInputController';
 
 export interface AnimatedObject {
     actualObject: THREE.Mesh;
@@ -72,7 +72,8 @@ export class BaseApplication {
 
     initCamera() {
         const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.set(-25, 50, -25);
+        camera.position.set(-30, 40, -30);
+        // camera.rotation.order = 'YXZ';
         camera.lookAt(0, 0, 0);
 
         this.camera = new CameraWrapper(camera);

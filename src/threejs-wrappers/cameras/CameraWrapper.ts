@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import { MoveDirection } from '../utils';
+
 
 export class CameraWrapper {
     actualCamera: THREE.PerspectiveCamera;
@@ -16,12 +18,28 @@ export class CameraWrapper {
         delete this.folowedObject;
     }
 
-    move() {
-        if (this.folowedObject !== undefined) {
+    move(direction?: MoveDirection, speed = 1) {
+        if (this.folowedObject === undefined && direction !== undefined) {
+            switch (direction) {
+                case MoveDirection.Forward:
+                    this.actualCamera.translateZ(-speed);
+                    break;
+                case MoveDirection.Backward:
+                    this.actualCamera.translateZ(speed);
+                    break;
+                case MoveDirection.Left:
+                    this.actualCamera.translateX(-speed);
+                    break;
+                case MoveDirection.Right:
+                    this.actualCamera.translateX(speed);
+                    break;
+            }
+        } 
+        else if (this.folowedObject !== undefined) {
             this.actualCamera.position.set(
-                this.folowedObject.position.x - Math.cos(this.folowedObject.rotation.y) * 30,
+                this.folowedObject.position.x + Math.sin(-this.folowedObject.rotation.y) * 30,
                 this.folowedObject.position.y + 20,
-                this.folowedObject.position.z + Math.sin(this.folowedObject.rotation.y) * 30
+                this.folowedObject.position.z - Math.cos(this.folowedObject.rotation.y) * 30
             );
         
             this.actualCamera.lookAt(this.folowedObject.position);

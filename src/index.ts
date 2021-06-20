@@ -6,10 +6,16 @@ window.addEventListener('DOMContentLoaded', () => {
     BA.animate(app);
 });
 
+enum MovableObject {
+    MainCube,
+    Camera
+}
+
 
 class Application extends BA.BaseApplication {
     mainCube: MainCube;
     animatedCubes: Array<AnimatedCube>;
+    movableObject: MovableObject = MovableObject.MainCube;
 
     init() {
         this.addGround();
@@ -21,7 +27,20 @@ class Application extends BA.BaseApplication {
         console.log(keyName+ " pressed");
         switch (keyName) {
             case 'm':
+                this.movableObject = MovableObject.MainCube;
                 this.camera.setFollowedObject(this.mainCube.actualObject);
+                break;
+            case 'r':
+                switch (this.movableObject) {
+                    case MovableObject.Camera:
+                        console.log("move cube");
+                        this.movableObject = MovableObject.MainCube;
+                        break;
+                    case MovableObject.MainCube:
+                        console.log("move camera");
+                        this.movableObject = MovableObject.Camera;
+                        break;
+                }
                 break;
             case '1':
                 this.camera.setFollowedObject(this.animatedCubes[0].actualObject);
@@ -37,7 +56,15 @@ class Application extends BA.BaseApplication {
                 this.initCamera();
                 break;
         }
-        this.mainCube.logObjectState();
+
+        switch (this.movableObject) {
+            case MovableObject.MainCube:
+                this.mainCube.logObjectState();
+                break;
+            case MovableObject.Camera:
+                this.camera.logCameraState();
+                break;
+        }
     }
 
     addGround() {
@@ -75,20 +102,41 @@ class Application extends BA.BaseApplication {
     keyboardInputHandler() {
         const acceleration = this.keyboardInput.activeKeys.includes('Shift') ? 2 : 1;
 
-        if (this.keyboardInput.activeKeys.includes('w')) {
-            this.mainCube.moveForward(acceleration);
-        }
+        switch (this.movableObject) {
+            case MovableObject.MainCube:
+                if (this.keyboardInput.activeKeys.includes('w')) {
+                    this.mainCube.moveForward(acceleration);
+                }
+        
+                if (this.keyboardInput.activeKeys.includes('s')) {
+                    this.mainCube.moveBackward(acceleration * 0.5);
+                }
+        
+                if (this.keyboardInput.activeKeys.includes('a')) {
+                    this.mainCube.rotateLeft(2);
+                }
+        
+                if (this.keyboardInput.activeKeys.includes('d')) {
+                    this.mainCube.rotateRight(2);
+                }
+                break;
+            case MovableObject.Camera:
+                if (this.keyboardInput.activeKeys.includes('w')) {
+                    this.camera.move(BA.MoveDirection.Forward, acceleration);
+                }
+                
+                if (this.keyboardInput.activeKeys.includes('s')) {
+                    this.camera.move(BA.MoveDirection.Backward, acceleration);
+                }
 
-        if (this.keyboardInput.activeKeys.includes('s')) {
-            this.mainCube.moveBackward(acceleration * 0.5);
-        }
-
-        if (this.keyboardInput.activeKeys.includes('a')) {
-            this.mainCube.rotateLeft(2);
-        }
-
-        if (this.keyboardInput.activeKeys.includes('d')) {
-            this.mainCube.rotateRight(2);
+                if (this.keyboardInput.activeKeys.includes('a')) {
+                    this.camera.move(BA.MoveDirection.Left, acceleration);
+                }
+                
+                if (this.keyboardInput.activeKeys.includes('d')) {
+                    this.camera.move(BA.MoveDirection.Right, acceleration);
+                }
+                break;
         }
     }
 }
@@ -122,7 +170,7 @@ class MainCube extends BA.ObjectWrapper {
         
         const object = new THREE.Mesh(geometry, material);
         object.position.set(0, 5, 0);
-        object.rotation.order = 'YXZ'
+        object.rotation.order = 'YXZ';
         object.castShadow = true;
         object.receiveShadow = true;
 
@@ -130,13 +178,11 @@ class MainCube extends BA.ObjectWrapper {
     }
 
     moveForward(speed=1) {
-        this.actualObject.position.x += Math.cos(this.actualObject.rotation.y) * speed;
-        this.actualObject.position.z += -Math.sin(this.actualObject.rotation.y) * speed;
+        this.actualObject.translateZ(speed);
     }
 
     moveBackward(speed=1) {
-        this.actualObject.position.x += -Math.cos(this.actualObject.rotation.y) * speed;
-        this.actualObject.position.z += Math.sin(this.actualObject.rotation.y) * speed;
+        this.actualObject.translateZ(-speed);
     }
 
     rotateLeft(speed=1) {

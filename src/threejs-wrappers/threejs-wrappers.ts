@@ -1,4 +1,5 @@
 export * from './BaseApplication';
-export * from './CameraWrapper';
-export * from './KeyboardInputController';
+export * from './cameras/CameraWrapper';
+export * from './input-controllers/KeyboardInputController';
 export * from './ObjectWrapper';
+export * from './utils'
