@@ -15,7 +15,7 @@ export class CameraWrapper {
         this.folowedObject = object;
     }
 
-    deletefollowedObject() {
+    deleteFollowedObject() {
         delete this.folowedObject;
     }
 

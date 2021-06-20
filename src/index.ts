@@ -49,7 +49,7 @@ class Application extends BA.BaseApplication {
                 this.camera.setFollowedObject(this.animatedCubes[2]);
                 break;
             case '0':
-                this.camera.deletefollowedObject();
+                this.camera.deleteFollowedObject();
                 this.initCamera();
                 break;
         }
