@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import * as BA from './BaseApplication'
+import * as BA from './threejs-wrappers/threejs-wrappers';
 
 window.addEventListener('DOMContentLoaded', () => {
     const app = new Application(true);
@@ -20,18 +20,6 @@ class Application extends BA.BaseApplication {
     onKeypress(keyName: string) {
         console.log(keyName+ " pressed");
         switch (keyName) {
-            // case 'w':
-            //     this.mainCube.moveForward();
-            //     break;
-            // case 's':
-            //     this.mainCube.moveBackward(0.5);
-            //     break;
-            // case 'a':
-            //     this.mainCube.rotateLeft();
-            //     break;
-            // case 'd':
-            //     this.mainCube.rotateRight();
-            //     break;
             case 'm':
                 this.camera.setFollowedObject(this.mainCube.actualObject);
                 break;

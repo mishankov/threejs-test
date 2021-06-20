@@ -1,85 +1,13 @@
-import { debug } from 'console';
 import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
-
-export class KeyboardInputController {
-    activeKeys: Array<string>;
-
-    constructor() {
-        this.activeKeys = [];
-
-        document.addEventListener('keydown', (e) => this.onKeyDown(e.key), false);
-        document.addEventListener('keyup', (e) => this.onKeyUp(e.key), false);
-    }
-
-    onKeyDown(key: string) {
-        if (!this.activeKeys.includes(key)) {
-            this.activeKeys.push(key);
-        }
-    }
-
-    onKeyUp(key: string) {
-        if (this.activeKeys.includes(key)) {
-            this.activeKeys.splice(this.activeKeys.indexOf(key), 1);
-        }
-    }
-}
-
-export class CameraWrapper {
-    actualCamera: THREE.PerspectiveCamera;
-    folowedObject: THREE.Mesh;
-
-    constructor(camera: THREE.PerspectiveCamera) {
-        this.actualCamera = camera
-    }
-
-    setFollowedObject(object: THREE.Mesh) {
-        this.folowedObject = object;
-    }
-
-    deleteFollowedObject() {
-        delete this.folowedObject;
-    }
-
-    move() {
-        if (this.folowedObject !== undefined) {
-            this.actualCamera.position.set(
-                this.folowedObject.position.x - Math.cos(this.folowedObject.rotation.y) * 30,
-                this.folowedObject.position.y + 20,
-                this.folowedObject.position.z + Math.sin(this.folowedObject.rotation.y) * 30
-            );
-        
-            this.actualCamera.lookAt(this.folowedObject.position);
-        }       
-    }
-
-    logCameraState() {
-        console.log('POSITION x: ' + this.actualCamera.position.x + '; y: ' + this.actualCamera.position.y + '; z: ' + this.actualCamera.position.z);
-        console.log('ROTATION x: ' + THREE.MathUtils.radToDeg(this.actualCamera.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.actualCamera.rotation.y) + '; z: ' + THREE.MathUtils.radToDeg(this.actualCamera.rotation.z));
-    }
-}
-
-export class ObjectWrapper {
-    actualObject: THREE.Mesh;
-
-    constructor(object: THREE.Mesh) {
-        this.actualObject = object;
-    }
-
-    animation() {}
-
-    logObjectState() {
-        console.log('POSITION x: ' + this.actualObject.position.x + '; y: ' + this.actualObject.position.y + '; z: ' + this.actualObject.position.z);
-        console.log('ROTATION x: ' + THREE.MathUtils.radToDeg(this.actualObject.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.actualObject.rotation.y) + '; z: ' + THREE.MathUtils.radToDeg(this.actualObject.rotation.z));
-    }
-}
+import { CameraWrapper } from './CameraWrapper';
+import { KeyboardInputController } from './KeyboardInputController';
 
 export interface AnimatedObject {
     actualObject: THREE.Mesh;
     animation: (time: number) => void;
 }
-
 
 export function animate(app: BaseApplication, time?: number) {
     requestAnimationFrame(function(time) {
