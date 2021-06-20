@@ -20,18 +20,18 @@ class Application extends BA.BaseApplication {
     onKeypress(keyName: string) {
         console.log(keyName+ " pressed");
         switch (keyName) {
-            case 'w':
-                this.mainCube.moveForward();
-                break;
-            case 's':
-                this.mainCube.moveBackward(0.5);
-                break;
-            case 'a':
-                this.mainCube.rotateLeft();
-                break;
-            case 'd':
-                this.mainCube.rotateRight();
-                break;
+            // case 'w':
+            //     this.mainCube.moveForward();
+            //     break;
+            // case 's':
+            //     this.mainCube.moveBackward(0.5);
+            //     break;
+            // case 'a':
+            //     this.mainCube.rotateLeft();
+            //     break;
+            // case 'd':
+            //     this.mainCube.rotateRight();
+            //     break;
             case 'm':
                 this.camera.setFollowedObject(this.mainCube.actualObject);
                 break;
@@ -83,6 +83,26 @@ class Application extends BA.BaseApplication {
             this.animatedObjects.push(animatedCube);
         }
     }
+
+    keyboardInputHandler() {
+        const acceleration = this.keyboardInput.activeKeys.includes('Shift') ? 2 : 1;
+
+        if (this.keyboardInput.activeKeys.includes('w')) {
+            this.mainCube.moveForward(acceleration);
+        }
+
+        if (this.keyboardInput.activeKeys.includes('s')) {
+            this.mainCube.moveBackward(acceleration * 0.5);
+        }
+
+        if (this.keyboardInput.activeKeys.includes('a')) {
+            this.mainCube.rotateLeft(2);
+        }
+
+        if (this.keyboardInput.activeKeys.includes('d')) {
+            this.mainCube.rotateRight(2);
+        }
+    }
 }
 
 class AnimatedCube extends BA.ObjectWrapper {
@@ -131,13 +151,11 @@ class MainCube extends BA.ObjectWrapper {
         this.actualObject.position.z += Math.sin(this.actualObject.rotation.y) * speed;
     }
 
-    rotateLeft() {
-        const quaternion = new THREE.Quaternion();
-        quaternion.setFromAxisAngle( new THREE.Vector3( 0, 1, 0 ), this.actualObject.rotation.y + THREE.MathUtils.degToRad(15));
-        this.actualObject.quaternion.copy(quaternion);
+    rotateLeft(speed=1) {
+        this.actualObject.rotateY(THREE.MathUtils.degToRad(1) * speed);
     }
 
-    rotateRight() {
-        this.actualObject.rotateY(-15*Math.PI/180);
+    rotateRight(speed=1) {
+        this.actualObject.rotateY(THREE.MathUtils.degToRad(-1) * speed);
     }
 }

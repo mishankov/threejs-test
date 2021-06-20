@@ -3,6 +3,29 @@ import * as THREE from 'three';
 import Stats from 'three/examples/jsm/libs/stats.module';
 
 
+export class KeyboardInputController {
+    activeKeys: Array<string>;
+
+    constructor() {
+        this.activeKeys = [];
+
+        document.addEventListener('keydown', (e) => this.onKeyDown(e.key), false);
+        document.addEventListener('keyup', (e) => this.onKeyUp(e.key), false);
+    }
+
+    onKeyDown(key: string) {
+        if (!this.activeKeys.includes(key)) {
+            this.activeKeys.push(key);
+        }
+    }
+
+    onKeyUp(key: string) {
+        if (this.activeKeys.includes(key)) {
+            this.activeKeys.splice(this.activeKeys.indexOf(key), 1);
+        }
+    }
+}
+
 export class CameraWrapper {
     actualCamera: THREE.PerspectiveCamera;
     folowedObject: THREE.Mesh;
@@ -65,9 +88,10 @@ export function animate(app: BaseApplication, time?: number) {
 
     for (let index = 0; index < app.animatedObjects.length; index++) {
         const element = app.animatedObjects[index];
-        
         element.animation(time);
     }
+
+    app.keyboardInputHandler();
 
     app.camera.move();
     app.render();
@@ -78,6 +102,7 @@ export class BaseApplication {
     camera: CameraWrapper;
     renderer: THREE.WebGLRenderer;
     stats: Stats;
+    keyboardInput: KeyboardInputController;
 
     animatedObjects: Array<AnimatedObject>;
 
@@ -106,7 +131,8 @@ export class BaseApplication {
         });
 
         this.initDebug();
-        
+
+        this.keyboardInput = new KeyboardInputController();
     }
 
     init() {}
@@ -184,5 +210,6 @@ export class BaseApplication {
 
     onKeypress(keyName: string) {}
 
+    keyboardInputHandler() {}
 
 };
