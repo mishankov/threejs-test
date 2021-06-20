@@ -37,10 +37,24 @@ export class CameraWrapper {
     }
 }
 
+export class ObjectWrapper {
+    actualObject: THREE.Mesh;
+
+    constructor(object: THREE.Mesh) {
+        this.actualObject = object;
+    }
+
+    animation() {}
+
+    logObjectState() {
+        console.log('POSITION x: ' + this.actualObject.position.x + '; y: ' + this.actualObject.position.y + '; z: ' + this.actualObject.position.z);
+        console.log('ROTATION x: ' + THREE.MathUtils.radToDeg(this.actualObject.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.actualObject.rotation.y) + '; z: ' + THREE.MathUtils.radToDeg(this.actualObject.rotation.z));
+    }
+}
 
 export interface AnimatedObject {
-    object: THREE.Mesh;
-    animation: (app: THREE.Mesh, time: number) => void;
+    actualObject: THREE.Mesh;
+    animation: (time: number) => void;
 }
 
 
@@ -52,7 +66,7 @@ export function animate(app: BaseApplication, time?: number) {
     for (let index = 0; index < app.animatedObjects.length; index++) {
         const element = app.animatedObjects[index];
         
-        element.animation(element.object, time);
+        element.animation(time);
     }
 
     app.camera.move();
