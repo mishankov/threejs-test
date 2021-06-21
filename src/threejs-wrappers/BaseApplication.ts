@@ -3,6 +3,7 @@ import Stats from 'three/examples/jsm/libs/stats.module';
 
 import { CameraWrapper } from './cameras/CameraWrapper';
 import { KeyboardInputController } from './input-controllers/KeyboardInputController';
+import { MouseInputContoller } from './input-controllers/MouseInputController';
 
 export interface AnimatedObject {
     actualObject: THREE.Mesh;
@@ -20,6 +21,7 @@ export function animate(app: BaseApplication, time?: number) {
     }
 
     app.keyboardInputHandler();
+    app.mouseInputHandler();
 
     app.camera.move();
     app.render();
@@ -31,6 +33,7 @@ export class BaseApplication {
     renderer: THREE.WebGLRenderer;
     stats: Stats;
     keyboardInput: KeyboardInputController;
+    mouseInput: MouseInputContoller;
 
     animatedObjects: Array<AnimatedObject>;
 
@@ -61,6 +64,7 @@ export class BaseApplication {
         this.initDebug();
 
         this.keyboardInput = new KeyboardInputController();
+        this.mouseInput = new MouseInputContoller();
     }
 
     init() {}
@@ -140,5 +144,6 @@ export class BaseApplication {
     onKeypress(keyName: string) {}
 
     keyboardInputHandler() {}
+    mouseInputHandler() {}
 
 };

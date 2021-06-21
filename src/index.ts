@@ -1,5 +1,8 @@
 import * as THREE from 'three';
+import { WebXRController } from 'three';
 import * as BA from './threejs-wrappers/threejs-wrappers';
+import { MouseButton } from './threejs-wrappers/threejs-wrappers';
+
 
 window.addEventListener('DOMContentLoaded', () => {
     const app = new Application(true);
@@ -16,6 +19,9 @@ class Application extends BA.BaseApplication {
     mainCube: MainCube;
     animatedCubes: Array<AnimatedCube>;
     movableObject: MovableObject = MovableObject.MainCube;
+
+    previousMousePosition: BA.MousePosition;
+    currentMousePosition: BA.MousePosition;
 
     init() {
         this.addGround();
@@ -137,6 +143,27 @@ class Application extends BA.BaseApplication {
                     this.camera.move(BA.MoveDirection.Right, acceleration);
                 }
                 break;
+        }
+    }
+
+    mouseInputHandler() {
+        if (this.mouseInput.includes(MouseButton.Main)) {
+            if (this.previousMousePosition === undefined) {
+                this.previousMousePosition = this.mouseInput.mousePosition;
+            } else {
+                this.currentMousePosition = this.mouseInput.mousePosition;
+                
+                const delta_y = this.currentMousePosition.y - this.previousMousePosition.y;
+                const delta_x = this.currentMousePosition.x - this.previousMousePosition.x;
+
+                this.camera.actualCamera.rotateX(delta_y/window.innerHeight*2*Math.PI);
+                this.camera.actualCamera.rotateY(delta_x/window.innerWidth*2*Math.PI);
+
+                this.previousMousePosition = this.currentMousePosition;
+            }
+        } else {
+            delete this.previousMousePosition;
+            delete this.currentMousePosition;
         }
     }
 }

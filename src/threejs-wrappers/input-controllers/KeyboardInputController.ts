@@ -1,6 +1,7 @@
+/**
+* Ignores case of inputed letters, e.g "W === "w" 
+*/
 export class KeyboardInputController {
-    // Ignores keys of inputed letters, e.g "W === "w"
-
     activeKeys: Array<string>;
 
     constructor() {
