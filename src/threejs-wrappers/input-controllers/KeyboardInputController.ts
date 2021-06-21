@@ -8,6 +8,10 @@ export class KeyboardInputController {
         document.addEventListener('keyup', (e) => this.onKeyUp(e.key), false);
     }
 
+    activeKeysIncludesCaseInsensitive (key: string) {
+        return this.activeKeys.filter((str) => str.toLowerCase() === key.toLowerCase()).length > 0;
+    }
+
     onKeyDown(key: string) {
         if (!this.activeKeys.includes(key)) {
             this.activeKeys.push(key);

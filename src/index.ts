@@ -104,36 +104,36 @@ class Application extends BA.BaseApplication {
 
         switch (this.movableObject) {
             case MovableObject.MainCube:
-                if (this.keyboardInput.activeKeys.includes('w')) {
+                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('w')) {
                     this.mainCube.moveForward(acceleration);
                 }
         
-                if (this.keyboardInput.activeKeys.includes('s')) {
+                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('s')) {
                     this.mainCube.moveBackward(acceleration * 0.5);
                 }
         
-                if (this.keyboardInput.activeKeys.includes('a')) {
+                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('a')) {
                     this.mainCube.rotateLeft(2);
                 }
         
-                if (this.keyboardInput.activeKeys.includes('d')) {
+                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('d')) {
                     this.mainCube.rotateRight(2);
                 }
                 break;
             case MovableObject.Camera:
-                if (this.keyboardInput.activeKeys.includes('w')) {
+                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('w')) {
                     this.camera.move(BA.MoveDirection.Forward, acceleration);
                 }
                 
-                if (this.keyboardInput.activeKeys.includes('s')) {
+                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('s')) {
                     this.camera.move(BA.MoveDirection.Backward, acceleration);
                 }
 
-                if (this.keyboardInput.activeKeys.includes('a')) {
+                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('a')) {
                     this.camera.move(BA.MoveDirection.Left, acceleration);
                 }
                 
-                if (this.keyboardInput.activeKeys.includes('d')) {
+                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('d')) {
                     this.camera.move(BA.MoveDirection.Right, acceleration);
                 }
                 break;
