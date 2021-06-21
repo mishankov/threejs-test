@@ -104,36 +104,36 @@ class Application extends BA.BaseApplication {
 
         switch (this.movableObject) {
             case MovableObject.MainCube:
-                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('w')) {
+                if (this.keyboardInput.includes('w')) {
                     this.mainCube.moveForward(acceleration);
                 }
         
-                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('s')) {
+                if (this.keyboardInput.includes('s')) {
                     this.mainCube.moveBackward(acceleration * 0.5);
                 }
         
-                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('a')) {
+                if (this.keyboardInput.includes('a')) {
                     this.mainCube.rotateLeft(2);
                 }
         
-                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('d')) {
+                if (this.keyboardInput.includes('d')) {
                     this.mainCube.rotateRight(2);
                 }
                 break;
             case MovableObject.Camera:
-                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('w')) {
+                if (this.keyboardInput.includes('w')) {
                     this.camera.move(BA.MoveDirection.Forward, acceleration);
                 }
                 
-                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('s')) {
+                if (this.keyboardInput.includes('s')) {
                     this.camera.move(BA.MoveDirection.Backward, acceleration);
                 }
 
-                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('a')) {
+                if (this.keyboardInput.includes('a')) {
                     this.camera.move(BA.MoveDirection.Left, acceleration);
                 }
                 
-                if (this.keyboardInput.activeKeysIncludesCaseInsensitive('d')) {
+                if (this.keyboardInput.includes('d')) {
                     this.camera.move(BA.MoveDirection.Right, acceleration);
                 }
                 break;

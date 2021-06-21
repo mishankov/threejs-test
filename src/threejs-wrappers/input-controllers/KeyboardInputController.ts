@@ -1,15 +1,17 @@
 export class KeyboardInputController {
+    // Ignores keys of inputed letters, e.g "W === "w"
+
     activeKeys: Array<string>;
 
     constructor() {
         this.activeKeys = [];
 
-        document.addEventListener('keydown', (e) => this.onKeyDown(e.key), false);
-        document.addEventListener('keyup', (e) => this.onKeyUp(e.key), false);
+        document.addEventListener('keydown', (e) => this.onKeyDown(e.key.toLowerCase()), false);
+        document.addEventListener('keyup', (e) => this.onKeyUp(e.key.toLowerCase()), false);
     }
 
-    activeKeysIncludesCaseInsensitive (key: string) {
-        return this.activeKeys.filter((str) => str.toLowerCase() === key.toLowerCase()).length > 0;
+    includes(key: string) {
+        return this.activeKeys.includes(key.toLowerCase());
     }
 
     onKeyDown(key: string) {
