@@ -100,7 +100,7 @@ class Application extends BA.BaseApplication {
     }
 
     keyboardInputHandler() {
-        const acceleration = this.keyboardInput.activeKeys.includes('Shift') ? 2 : 1;
+        const acceleration = this.keyboardInput.includes('Shift') ? 2 : 1;
 
         switch (this.movableObject) {
             case MovableObject.MainCube:
