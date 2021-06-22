@@ -156,8 +156,7 @@ class Application extends BA.BaseApplication {
                 const delta_y = this.currentMousePosition.y - this.previousMousePosition.y;
                 const delta_x = this.currentMousePosition.x - this.previousMousePosition.x;
 
-                this.camera.actualCamera.rotateX(delta_y/window.innerHeight*2*Math.PI);
-                this.camera.actualCamera.rotateY(delta_x/window.innerWidth*2*Math.PI);
+                this.camera.rotate(delta_y / window.innerHeight * Math.PI, delta_x / window.innerWidth * Math.PI);
 
                 this.previousMousePosition = this.currentMousePosition;
             }

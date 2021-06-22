@@ -46,6 +46,11 @@ export class CameraWrapper {
         }       
     }
 
+    rotate(x: number, y: number) {
+        this.actualCamera.rotateX(x);
+        this.actualCamera.rotateY(y);
+    }
+
     logCameraState() {
         console.log('POSITION x: ' + this.actualCamera.position.x + '; y: ' + this.actualCamera.position.y + '; z: ' + this.actualCamera.position.z);
         console.log('ROTATION x: ' + THREE.MathUtils.radToDeg(this.actualCamera.rotation.x) + '; y: ' + THREE.MathUtils.radToDeg(this.actualCamera.rotation.y) + '; z: ' + THREE.MathUtils.radToDeg(this.actualCamera.rotation.z));
