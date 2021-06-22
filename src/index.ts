@@ -20,8 +20,8 @@ class Application extends BA.BaseApplication {
     animatedCubes: Array<AnimatedCube>;
     movableObject: MovableObject = MovableObject.MainCube;
 
-    previousMousePosition: BA.MousePosition;
-    currentMousePosition: BA.MousePosition;
+    previousMousePosition: THREE.Vector2;
+    currentMousePosition: THREE.Vector2;
 
     init() {
         this.addGround();

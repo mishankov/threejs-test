@@ -1,7 +1,4 @@
-export interface MousePosition {
-    x: number;
-    y: number
-}
+import * as THREE from 'three';
 
 export enum MouseButton {
     Main,
@@ -13,7 +10,7 @@ export enum MouseButton {
 
 export class MouseInputContoller {
     activeButtons: Array<MouseButton>;
-    mousePosition: MousePosition;
+    mousePosition: THREE.Vector2;
 
     constructor() {
         this.activeButtons = [];
@@ -40,6 +37,6 @@ export class MouseInputContoller {
     }
 
     onMouseMove(x: number, y: number) {
-        this.mousePosition = {x: x, y: y};
+        this.mousePosition = new THREE.Vector2(x, y);
     }
 }
